@@ -37,7 +37,7 @@ const options = {
 // services
 const authSvc = new AuthService(options);
 
-app.use('/api/services/auth', authSvc.router);
+app.use('/api/auth', authSvc.router);
 // listen on given port
 const port = process.env.PORT || 3000;
 

@@ -8,6 +8,9 @@
         "paths": {
             "axios": [
                 "../../node_modules/axios"
+            ],
+            "services/*" : [
+                "services/*"
             ]
         },
         "skipLibCheck": true,
