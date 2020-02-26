@@ -19,5 +19,12 @@
         "webpack": "^4.41.6",
         "webpack-cli": "^3.3.11",
         "webpack-dev-server": "^3.10.3"
+    },
+    "dependencies": {
+        "axios": "^0.19.2",
+        "express": "^4.17.1",
+        "express-session": "^1.17.0",
+        "forge-apis": "^0.7.3",
+        "uid-safe": "^2.1.5"
     }
 }
