@@ -2,4 +2,7 @@ node_modules
 
 .vscode
 
+src/**/*.js
+src/**/*.js.map
+
 package-lock.json
