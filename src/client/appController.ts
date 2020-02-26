@@ -1,7 +1,9 @@
 import { AuthService } from 'services/authService';
+import { ProjectService } from 'services/projectService';
 
 export class AppController {
     private _authService: AuthService;
+    private _projectService: ProjectService;
     private _btnLogin: JQuery;
     private _loginContainer: JQuery;
     private _projectContainer: JQuery;
@@ -13,7 +15,7 @@ export class AppController {
 
     public initialize(): void {
         this._authService = new AuthService();
-
+        this._projectService = new ProjectService();
         this._btnLogin = $('#login-btn');
         this._btnLogin.on('click', () => {
             this.onLoginClick();
@@ -35,10 +37,20 @@ export class AppController {
         this._username.text();
     }
 
-    private showProjectView(): void {
+    private async showProjectView(): Promise<void> {
         this._loginContainer.toggleClass('hidden', true);
         this._projectContainer.toggleClass('hidden', false);
         this._username.text(this._userProfile.userName);
+        // fetch list of available projects
+        this._projectContainer.empty();
+        const projects = await this._projectService.getProjects();
+
+        projects.forEach((p) => {
+            this._projectContainer.append(
+                $('<div/>')
+                    .text(`${p.name}`)
+            );
+        });
     }
 
     private onLoginClick(): void {

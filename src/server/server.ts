@@ -4,6 +4,7 @@ import * as session from 'express-session';
 import * as path from 'path';
 
 import { AuthService } from './authService';
+import { ProjectService } from './projectService';
 
 const app = express();
 
@@ -31,13 +32,17 @@ const options = {
     clientID: process.env.FORGE_CLIENT_ID,
     clientSecret: process.env.FORGE_CLIENT_SECRET,
     callbackURL: process.env.FORGE_CALLBACK_URL,
-    useProxy: process.env.USE_PROXY === '1'
+    useProxy: process.env.USE_PROXY === '1',
+    hubID: process.env.HUB_ID
 };
 
 // services
 const authSvc = new AuthService(options);
 
 app.use('/api/auth', authSvc.router);
+const projectSvc = new ProjectService(options, authSvc);
+
+app.use('/api/project', projectSvc.router);
 // listen on given port
 const port = process.env.PORT || 3000;
 

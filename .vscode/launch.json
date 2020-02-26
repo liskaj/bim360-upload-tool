@@ -13,7 +13,8 @@
                 "FORGE_CLIENT_ID": "",
                 "FORGE_CLIENT_SECRET": "",
                 "FORGE_CALLBACK_URL": "",
-                "USE_PROXY": "1"
+                "USE_PROXY": "1",
+                "HUB_ID": ""
             }
         }
     ]
