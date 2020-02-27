@@ -8,10 +8,28 @@ export class ServiceClient {
             return response.data;
         }
         catch (err) {
-            let msg = err.response.data;
+            let msg = err.message;
 
             if (err.response && err.response.statusText) {
                 msg = err.response.statusText
+            }
+            throw new Error(msg);
+        }
+    }
+
+    public async put(url: string, inputs?: any, headers?: any): Promise<any> {
+        try {
+            const response = await axios.put(url, inputs, {
+                headers
+            });
+
+            return response.data;
+        }
+        catch (err) {
+            let msg = err.message;
+
+            if (err.response && err.response.statusText) {
+                msg = err.response.statusText;
             }
             throw new Error(msg);
         }
@@ -24,7 +42,12 @@ export class ServiceClient {
             return response.data;
         }
         catch (err) {
-            return err.response.data;
+            let msg = err.message;
+
+            if (err.response && err.response.statusText) {
+                msg = err.response.statusText;
+            }
+            throw new Error(msg);
         }
     }
 }
