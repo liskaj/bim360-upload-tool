@@ -91,7 +91,7 @@ export class AppController {
         projectItem.toggleClass('selected', true);
     }
 
-    private onFileSelectClick(): void {
+    private async onFileSelectClick(): Promise<void> {
         const files = (this._fileList[0] as HTMLInputElement).files;
         const input = {
             project: this._selectedProject,
@@ -105,7 +105,18 @@ export class AppController {
                 name: file.name
             });
         }
-        this._projectService.createImport(input);
+        const response = await this._projectService.createPackage(input);
+        // upload file to provided storage
+        const formData = new FormData();
+
+        formData.append('file', files.item(0));
+        formData.append('folder', response.locations[0].folder);
+        formData.append('name', files.item(0).name);
+        formData.append('project', this._selectedProject);
+        formData.append('storage', response.locations[0].storage);
+        const uploadResult = await this._projectService.uploadFile(formData);
+
+        console.debug(`${uploadResult}`);
     }
 
     private onProjectSelectClick(): void {

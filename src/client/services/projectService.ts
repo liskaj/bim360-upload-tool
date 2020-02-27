@@ -6,8 +6,14 @@ export interface Project {
 }
 
 export class ProjectService extends ServiceClient {
-    public createImport(input: any): Promise<any> {
-        const url = `api/project/import`;
+    public uploadFile(data: any): Promise<any> {
+        const url = `api/project/upload`;
+
+        return this.post(url, data);
+    }
+
+    public createPackage(input: any): Promise<any> {
+        const url = `api/project/package`;
 
         return this.post(url, input);
     }
