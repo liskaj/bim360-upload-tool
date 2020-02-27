@@ -73,6 +73,18 @@ export class ServiceBase {
 
     protected readData(fileName: string): Promise<any> {
         return new Promise<any>((resolve, reject) => {
+            fs.readFile(fileName, (err, data) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(data);
+                }
+            });
+        });
+    }
+
+    protected readDataAsJson(fileName: string): Promise<any> {
+        return new Promise<any>((resolve, reject) => {
             fs.readFile(fileName, 'utf-8', (err, data) => {
                 if (err) {
                     reject(err);
