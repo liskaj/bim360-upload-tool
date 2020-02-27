@@ -14,6 +14,7 @@ export class AppController {
     private _fileList: JQuery;
     private _username: JQuery;
     private _userProfile: any;
+    private _selectedProject: string;
 
     constructor() {
     }
@@ -36,6 +37,9 @@ export class AppController {
         this._loginContainer = $('#login-container');
         this._projectContainer = $('#project-container');
         this._projectList = $('#project-list');
+        this._projectList.on('click', (e) => {
+            this.onProjectListClick(e);
+        });
         this._fileContainer = $('#file-container');
         this._fileList = $('#file-list');
         this._username = $('#username')
@@ -65,7 +69,7 @@ export class AppController {
 
         projects.forEach((p) => {
             const div = $(`
-                <div data-project="${p.id}">
+                <div class="project-item" data-project="${p.id}">
                     <span>${p.name}</span>
                 </div>`);
 
@@ -79,15 +83,18 @@ export class AppController {
         });
     }
 
-    private onProjectSelectClick(): void {
-        this._loginContainer.toggleClass('hidden', true);
-        this._projectContainer.toggleClass('hidden', true);
-        this._fileContainer.toggleClass('hidden', false);
+    private onProjectListClick(e): void {
+        const target = $(e.target);
+        const projectItem = target.parent();
+        
+        this._projectList.children().toggleClass('selected', false);
+        projectItem.toggleClass('selected', true);
     }
 
     private onFileSelectClick(): void {
         const files = (this._fileList[0] as HTMLInputElement).files;
         const input = {
+            project: this._selectedProject,
             files: []
         };
 
@@ -99,8 +106,19 @@ export class AppController {
             });
         }
         this._projectService.createImport(input);
-        /*this._loginContainer.toggleClass('hidden', true);
+    }
+
+    private onProjectSelectClick(): void {
+        // find selected project
+        const projectElement = $('#project-list div.selected');
+
+        if (projectElement.length === 0) {
+            return;
+        }
+        this._selectedProject = projectElement.data('project');
+        // switch view
+        this._loginContainer.toggleClass('hidden', true);
         this._projectContainer.toggleClass('hidden', true);
-        this._fileContainer.toggleClass('hidden', false);*/
+        this._fileContainer.toggleClass('hidden', false);
     }
 }

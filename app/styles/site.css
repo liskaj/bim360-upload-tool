@@ -7,3 +7,12 @@ html, body {
 .hidden {
     visibility: hidden;
 }
+
+.project-item {
+    margin: 2px;
+    padding: 2px;
+}
+
+.project-item.selected {
+    background-color: lightblue;
+}
