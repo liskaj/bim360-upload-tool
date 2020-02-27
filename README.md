@@ -17,6 +17,7 @@ Use following steps to setup environment for local development:
 * Run `npm install`.
 * Run `npm run build:server`.
 * Start server. Then server will run on port `3000`.
+
   **Note** You can use F5 to start server when using Visual Studio Code.
 * Run `npm run dev`. It starts webpack server on port `5000`.
 * Navigate your browser to `http://localhost:5000`.
@@ -26,7 +27,7 @@ The project contains following folders:
 * .vscode - contains configuration files for Visual Studio Code.
 * app - contains static content for application (such as html, css, images and so on).
 * node_modules - contains node.js packages installed by `npm install`.
-* src - source code of application in TypeScript
+* src - source code of application in [TypeScript](https://www.typescriptlang.org/)
   * client - source code for front end
     * services - client side wrappers for backend services
     * main.ts - entry point for front end
