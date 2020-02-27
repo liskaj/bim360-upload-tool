@@ -8,6 +8,7 @@ import { StatusCodes } from './statusCodes';
 export class AuthService extends ServiceBase {
     private _scopesInternal: string[] = [
         'user-profile:read',
+        'data:create',
         'data:read',
         'data:write'
     ];
