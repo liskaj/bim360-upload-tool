@@ -1,0 +1,12 @@
+[
+    {
+        "pattern": "A_P",
+        "location": "Project Files/27.02.2020 FORGE TEST/BUILDING A/PLAN",
+        "folderID": "urn:adsk.wipprod:fs.folder:co.7O4NRASlRdGuggXvDWMlAw"
+    },
+    {
+        "pattern": "B_E",
+        "location": "Project Files/27.02.2020 FORGE TEST/BUILDING B/ELEVATION",
+        "folderID": "urn:adsk.wipprod:fs.folder:co.42DyXco2SHSP3YsYLIAvyA"
+    }
+]

@@ -1,4 +1,5 @@
 import * as express from 'express';
+import * as fs from 'fs';
 
 export class ServiceBase {
     private _router: express.Router;
@@ -17,5 +18,17 @@ export class ServiceBase {
     }
 
     protected initializeRoutes(): void {
+    }
+
+    protected readData(fileName: string): Promise<any> {
+        return new Promise<any>((resolve, reject) => {
+            fs.readFile(fileName, 'utf-8', (err, data) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(JSON.parse(data));
+                }
+            });
+        });
     }
 }
