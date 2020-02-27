@@ -5,7 +5,7 @@ html, body {
 }
 
 .hidden {
-    visibility: hidden;
+    display: none;
 }
 
 .project-item {
