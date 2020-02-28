@@ -1,5 +1,10 @@
 [
     {
+        "pattern": "A_E",
+        "location": "Project Files/27.02.2020 FORGE TEST/BUILDING A/ELEVATION",
+        "folderID": "urn:adsk.wipprod:fs.folder:co.uABQCvy7S5WyIouAyJLs_g"
+    },
+    {
         "pattern": "A_P",
         "location": "Project Files/27.02.2020 FORGE TEST/BUILDING A/PLAN",
         "folderID": "urn:adsk.wipprod:fs.folder:co.7O4NRASlRdGuggXvDWMlAw"
@@ -8,5 +13,10 @@
         "pattern": "B_E",
         "location": "Project Files/27.02.2020 FORGE TEST/BUILDING B/ELEVATION",
         "folderID": "urn:adsk.wipprod:fs.folder:co.42DyXco2SHSP3YsYLIAvyA"
+    },
+    {
+        "pattern": "B_P",
+        "location": "Project Files/27.02.2020 FORGE TEST/BUILDING B/PLAN",
+        "folderID": "urn:adsk.wipprod:fs.folder:co.1jsFIUIkRqSV38KhQButRw"
     }
 ]
