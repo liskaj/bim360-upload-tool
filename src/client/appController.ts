@@ -97,6 +97,7 @@ export class AppController {
             project: this._selectedProject,
             files: []
         };
+        const fileNames = {};
 
         for (let i = 0; i < files.length; i++) {
             const file = files.item(i);
@@ -104,19 +105,24 @@ export class AppController {
             input.files.push({
                 name: file.name
             });
+            fileNames[file.name] = i;
         }
         const response = await this._projectService.createPackage(input);
-        // upload file to provided storage
-        const formData = new FormData();
+        // upload files to provided storage
+        for (const location of response.locations) {
+            const formData = new FormData();
+            const index = fileNames[location.file];
+            const file = files.item(index);
 
-        formData.append('file', files.item(0));
-        formData.append('folder', response.locations[0].folder);
-        formData.append('name', files.item(0).name);
-        formData.append('project', this._selectedProject);
-        formData.append('storage', response.locations[0].storage);
-        const uploadResult = await this._projectService.uploadFile(formData);
+            formData.append('file', file);
+            formData.append('folder', location.folder);
+            formData.append('name', location.file);
+            formData.append('project', this._selectedProject);
+            formData.append('storage', location.storage);
+            const uploadResult = await this._projectService.uploadFile(formData);
 
-        console.debug(`${uploadResult}`);
+            console.debug(`${uploadResult.item}:${uploadResult.version}`);
+        }
     }
 
     private onProjectSelectClick(): void {

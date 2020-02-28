@@ -108,7 +108,9 @@ export class ProjectService extends ServiceBase {
             const uploadResult = await this.uploadObject(credentials.access_token, storageData.bucket, storageData.objectName, data, formData.files.file.type);
             const itemResult = await this.createItem(credentials.access_token, formData.fields.project, formData.fields.folder, uploadResult.objectId, formData.fields.name);
             const result = {
-                id: itemResult.data.id
+                item: itemResult.data.id,
+                file: itemResult.included[0].id,
+                version: itemResult.included[0].attributes.versionNumber
             };
 
             res.status(StatusCodes.OK).json(result);
@@ -204,7 +206,14 @@ export class ProjectService extends ServiceBase {
 
     private async uploadObject(token: string, bucketKey: string, objectName: string, data: any, contentType?: string) {
         const url = `https://developer.api.autodesk.com/oss/v2/buckets/${bucketKey}/objects/${objectName}`;
-        const response = await this.put(url, token, data, null, { 'Content-Type': contentType });
+        let headers = null;
+
+        if (contentType) {
+            headers = {
+                'Content-Type': contentType
+            };
+        }
+        const response = await this.put(url, token, data, null, headers);
 
         return response;
     }
