@@ -106,13 +106,27 @@ export class ProjectService extends ServiceBase {
             const storageData = this.parseStorageUrn(formData.fields.storage);
             const data = await this.readData(formData.files.file.path);
             const uploadResult = await this.uploadObject(credentials.access_token, storageData.bucket, storageData.objectName, data, formData.files.file.type);
-            const itemResult = await this.createItem(credentials.access_token, formData.fields.project, formData.fields.folder, uploadResult.objectId, formData.fields.name);
-            const result = {
-                item: itemResult.data.id,
-                file: itemResult.included[0].id,
-                version: itemResult.included[0].attributes.versionNumber
-            };
+            // find if there is item with same name
+            const searchResult = await this.findItem(credentials.access_token, formData.fields.project, formData.fields.folder, formData.fields.name);
+            let result;
 
+            if (searchResult.data.length > 0) {
+                const versionResult = await this.createItemVersion(credentials.access_token, formData.fields.project, searchResult.data[0].id, uploadResult.objectId, formData.fields.name);
+
+                result = {
+                    item: versionResult.included[0].id,
+                    file: versionResult.data.id,
+                    version: versionResult.data.versionNumber
+                };
+            } else {
+                const itemResult = await this.createItem(credentials.access_token, formData.fields.project, formData.fields.folder, uploadResult.objectId, formData.fields.name);
+
+                result = {
+                    item: itemResult.data.id,
+                    file: itemResult.included[0].id,
+                    version: itemResult.included[0].attributes.versionNumber
+                };
+            }
             res.status(StatusCodes.OK).json(result);
         }
         catch (err) {
@@ -173,9 +187,42 @@ export class ProjectService extends ServiceBase {
             ]
         };
 
-        const response = await this.post(url, token, inputs, null, { 'Content-Type': 'application/vnd.api+json' });
+        return this.post(url, token, inputs, null, { 'Content-Type': 'application/vnd.api+json' });
+    }
 
-        return response;
+    private async createItemVersion(token: string, projectID: string, itemID: string, objectID: string, displayName: string) {
+        const url = `https://developer.api.autodesk.com/data/v1/projects/${projectID}/versions`;
+        const inputs = {
+            jsonapi: {
+                version: '1.0'
+            },
+            data: {
+                type: 'versions',
+                attributes: {
+                    name: displayName,
+                    extension: {
+                        type: 'versions:autodesk.bim360:File',
+                        version: '1.0'
+                    }
+                },
+                relationships: {
+                    item: {
+                        data: {
+                            type: 'items',
+                            id: itemID
+                        }
+                    },
+                    storage: {
+                        data: {
+                            type: 'objects',
+                            id: objectID
+                        }
+                    }
+                }
+            }
+        };
+
+        return this.post(url, token, inputs, null, { 'Content-Type': 'application/vnd.api+json' });
     }
 
     private async createStorage(token: string, projectID: string, folderID: string, fileName: string) {
@@ -199,9 +246,13 @@ export class ProjectService extends ServiceBase {
                 }
             }
         };
-        const response = await this.post(url, token, inputs);
+        return this.post(url, token, inputs);
+    }
 
-        return response;
+    private async findItem(token: string, projectID: string, folderID: string, displayName: string): Promise<any> {
+        const url = `https://developer.api.autodesk.com/data/v1/projects/${projectID}/folders/${folderID}/contents?filter[displayName]=${displayName}`;
+
+        return this.get(url, token);
     }
 
     private async uploadObject(token: string, bucketKey: string, objectName: string, data: any, contentType?: string) {
@@ -213,9 +264,7 @@ export class ProjectService extends ServiceBase {
                 'Content-Type': contentType
             };
         }
-        const response = await this.put(url, token, data, null, headers);
-
-        return response;
+        return this.put(url, token, data, null, headers);
     }
 
     private parseFormData(req): Promise<any> {

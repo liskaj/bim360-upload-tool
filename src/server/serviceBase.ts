@@ -22,6 +22,29 @@ export class ServiceBase {
     protected initializeRoutes(): void {
     }
 
+    protected get(url: string, token: string, params?: any, additionalHeaders?: { [key: string]: string }): Promise<any> {
+        return new Promise<any>((resolve, reject) => {
+            let headers = {
+                'Authorization': `Bearer ${token}`
+            };
+            if (additionalHeaders) {
+                headers = Object.assign(headers, additionalHeaders);
+            }
+
+            axios({
+                method: 'get',
+                url: url,
+                headers: headers,
+                data: null,
+                params: params
+            }).then((res) => {
+                resolve(res.data);
+            }).catch((err) => {
+                reject(err);
+            });
+        });
+    }
+
     protected post(url: string, token: string, inputs?: any, params?: any, additionalHeaders?: { [key: string]: string }): Promise<any> {
         return new Promise<any>((resolve, reject) => {
             let headers = {
