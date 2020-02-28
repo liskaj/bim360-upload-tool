@@ -246,6 +246,7 @@ export class ProjectService extends ServiceBase {
                 }
             }
         };
+
         return this.post(url, token, inputs);
     }
 
@@ -264,6 +265,7 @@ export class ProjectService extends ServiceBase {
                 'Content-Type': contentType
             };
         }
+
         return this.put(url, token, data, null, headers);
     }
 

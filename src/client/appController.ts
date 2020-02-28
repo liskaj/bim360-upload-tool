@@ -7,11 +7,14 @@ export class AppController {
     private _btnLogin: JQuery;
     private _btnProjectSelect: JQuery;
     private _btnFileSelect: JQuery;
+    private _btnRestart: JQuery;
     private _loginContainer: JQuery;
     private _projectContainer: JQuery;
     private _projectList: JQuery;
     private _fileContainer: JQuery;
     private _fileList: JQuery;
+    private _resultContainer: JQuery;
+    private _resultList: JQuery;
     private _username: JQuery;
     private _userProfile: any;
     private _selectedProject: string;
@@ -34,6 +37,10 @@ export class AppController {
         this._btnFileSelect.on('click', () => {
             this.onFileSelectClick();
         });
+        this._btnRestart = $('#restart-btn');
+        this._btnRestart.on('click', () => {
+            this.onRestartClick();
+        });
         this._loginContainer = $('#login-container');
         this._projectContainer = $('#project-container');
         this._projectList = $('#project-list');
@@ -42,6 +49,8 @@ export class AppController {
         });
         this._fileContainer = $('#file-container');
         this._fileList = $('#file-list');
+        this._resultContainer = $('#result-container');
+        this._resultList = $('#result-list');
         this._username = $('#username')
         this._authService.getUserProfile().then((userProfile) => {
             this._userProfile = userProfile;
@@ -55,6 +64,7 @@ export class AppController {
         this._loginContainer.toggleClass('hidden', false);
         this._projectContainer.toggleClass('hidden', true);
         this._fileContainer.toggleClass('hidden', true);
+        this._resultContainer.toggleClass('hidden', true);
         this._username.text();
     }
 
@@ -62,6 +72,7 @@ export class AppController {
         this._loginContainer.toggleClass('hidden', true);
         this._projectContainer.toggleClass('hidden', false);
         this._fileContainer.toggleClass('hidden', true);
+        this._resultContainer.toggleClass('hidden', true);
         this._username.text(this._userProfile.userName);
         // fetch list of available projects
         this._projectList.empty();
@@ -92,6 +103,10 @@ export class AppController {
     }
 
     private async onFileSelectClick(): Promise<void> {
+        this._projectContainer.toggleClass('hidden', true);
+        this._fileContainer.toggleClass('hidden', true);
+        this._resultContainer.toggleClass('hidden', false);
+        this._resultList.empty();
         const files = (this._fileList[0] as HTMLInputElement).files;
         const input = {
             project: this._selectedProject,
@@ -119,10 +134,26 @@ export class AppController {
             formData.append('name', location.file);
             formData.append('project', this._selectedProject);
             formData.append('storage', location.storage);
+            // display message
+            const div = $(`
+                <div class="result-item">
+                    <span>Uploading file: ${location.file}</span>
+                </div>`);
+
+            this._resultList.append(div);
+            // upload
             const uploadResult = await this._projectService.uploadFile(formData);
 
+            // update message
+            div.children('span').text(`Uploading file: ${location.file}...done`);
             console.debug(`${uploadResult.item}:${uploadResult.version}`);
         }
+    }
+
+    private async onRestartClick(): Promise<void> {
+        this._projectContainer.toggleClass('hidden', false);
+        this._fileContainer.toggleClass('hidden', true);
+        this._resultContainer.toggleClass('hidden', true);
     }
 
     private onProjectSelectClick(): void {
